@@ -7,6 +7,9 @@ const userRoutes = require("./routes/userRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const connectionRoutes = require("./routes/connectionRoutes");
+const eventRoutes = require("./routes/eventRoutes");
+const announcementRoutes = require("./routes/announcementRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 dotenv.config();
 connectDB();
@@ -20,6 +23,9 @@ app.use("/api/users", userRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/connections", connectionRoutes);
+app.use('/api/events', eventRoutes);
+app.use("/api/announcements", announcementRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
