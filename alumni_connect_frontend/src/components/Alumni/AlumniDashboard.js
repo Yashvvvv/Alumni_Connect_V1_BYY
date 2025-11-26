@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import "../styles/AlumniDashboard.css" // Import external CSS file
 
 const AlumniDashboard = () => {
@@ -20,17 +21,11 @@ const AlumniDashboard = () => {
 
         {/* Navigation */}
         <nav className="sidebar-nav">
-          {["Dashboard", "Mentorship", "Events", "Messages", "Profile"].map(
-            (item, i) => (
-              <a
-                key={i}
-                href="#"
-                className={`sidebar-link ${i === 0 ? "active" : ""}`}
-              >
-                {item}
-              </a>
-            )
-          )}
+          <Link to="/" className={`sidebar-link active`}>Dashboard</Link>
+          <Link to="#" className="sidebar-link">Mentorship</Link>
+          <Link to="#" className="sidebar-link">Events</Link>
+          <Link to="#" className="sidebar-link">Messages</Link>
+          <Link to="/profile" className="sidebar-link">Profile</Link>
         </nav>
       </aside>
 

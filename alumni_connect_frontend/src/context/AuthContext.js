@@ -21,13 +21,36 @@ export const AuthProvider = ({ children }) => {
 
   // Check if user is logged in on mount
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    
-    if (token && storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
+    const initAuth = async () => {
+      const token = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
+
+      // If we have a token, try to refresh current user from API to ensure correct shape
+      if (token) {
+        try {
+          const current = await authAPI.getCurrentUser();
+          // API returns user object
+          setUser(current);
+          setLoading(false);
+          return;
+        } catch (err) {
+          // If token invalid or request fails, fall back to stored user if available
+          console.warn('Failed to refresh current user:', err?.message || err);
+        }
+      }
+
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (e) {
+          console.warn('Invalid stored user in localStorage');
+        }
+      }
+
+      setLoading(false);
+    };
+
+    initAuth();
   }, []);
 
   // Register function

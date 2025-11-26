@@ -73,4 +73,22 @@ export const profileAPI = {
   },
 };
 
+// Dashboard API
+export const dashboardAPI = {
+  // Get student dashboard summary
+  getStudentDashboard: async () => {
+    const response = await api.get('/api/dashboard/student');
+    return response.data;
+  },
+  // Get alumni dashboard summary
+  getAlumniDashboard: async () => {
+    const response = await api.get('/api/dashboard/alumni');
+    return response.data;
+  },
+  // Get admin dashboard summary
+  getAdminDashboard: async () => {
+    const response = await api.get('/api/dashboard/admin');
+    return response.data;
+  },
+};
 export default api;

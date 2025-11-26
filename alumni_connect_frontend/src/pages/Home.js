@@ -5,15 +5,21 @@ import "../components/styles/Home.css";
 
 const Home = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const handleGetStarted = () => {
+    // debug log to inspect auth state when clicking dashboard
+    // eslint-disable-next-line no-console
+    console.log('[Home] handleGetStarted', { isAuthenticated, user });
+
     if (isAuthenticated) {
-      // If logged in, go to dashboard based on role
-      if (user.role === 'student') {
-        navigate('/StudentDashboard');
-      } else if (user.role === 'alumni') {
+      // If logged in, go to dashboard based on role (default to student)
+      if (user?.role === 'alumni') {
         navigate('/AlumniDashboard');
+      } else if (user?.role === 'admin') {
+        navigate('/AdminDashboard');
+      } else {
+        navigate('/StudentDashboard');
       }
     } else {
       // If not logged in, go to register
@@ -23,6 +29,13 @@ const Home = () => {
 
   const handleLogin = () => {
     navigate('/login');
+  };
+
+  const handleLogout = () => {
+    if (logout) {
+      logout();
+      navigate('/');
+    }
   };
 
   return (
@@ -51,7 +64,10 @@ const Home = () => {
           </nav>
           <div className="header-button">
             {isAuthenticated ? (
-              <button onClick={handleGetStarted}>Dashboard</button>
+              <>
+                <button onClick={handleGetStarted} className="btn-primary">Dashboard</button>
+                <button onClick={handleLogout} className="btn-login" style={{ marginLeft: 8 }}>Logout</button>
+              </>
             ) : (
               <>
                 <button onClick={handleLogin} className="btn-login">

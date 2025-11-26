@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import { Home, Users, Calendar, MessageSquare, User } from "lucide-react";
 
 const Sidebar = () => {
@@ -19,12 +20,12 @@ const Sidebar = () => {
 
       {/* Nav Links */}
       <nav className="flex flex-col space-y-2">
-        <a
-          href="#"
+        <Link
+          to="/"
           className="flex items-center space-x-3 p-2 rounded-lg bg-blue-50 text-blue-600 font-medium"
         >
           <Home size={18} /> <span>Dashboard</span>
-        </a>
+        </Link>
         <a
           href="#"
           className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 text-gray-700"
@@ -43,12 +44,12 @@ const Sidebar = () => {
         >
           <MessageSquare size={18} /> <span>Messages</span>
         </a>
-        <a
-          href="#"
+        <Link
+          to="/profile"
           className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 text-gray-700"
         >
           <User size={18} /> <span>Profile</span>
-        </a>
+        </Link>
       </nav>
     </aside>
   );

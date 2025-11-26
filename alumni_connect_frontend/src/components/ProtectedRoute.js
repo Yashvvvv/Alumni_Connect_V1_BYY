@@ -21,12 +21,19 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   // Redirect to login if not authenticated
   if (!user) {
+    // debug log for auth failure
+    // eslint-disable-next-line no-console
+    console.log('[ProtectedRoute] no user -> redirecting to /login', { loading, user, allowedRoles });
     return <Navigate to="/login" replace />;
   }
 
   // Check if user has the required role
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+  if (allowedRoles) {
+    const userRole = (user?.role || '').toString().toLowerCase();
+    const allowed = allowedRoles.map(r => r.toString().toLowerCase());
+    if (!allowed.includes(userRole)) {
+      return <Navigate to="/" replace />;
+    }
   }
 
   return children;

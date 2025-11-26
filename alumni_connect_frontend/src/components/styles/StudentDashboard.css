@@ -217,3 +217,125 @@ body {
   background-color: var(--primary);
   transition: width 0.4s ease-in-out;
 }
+
+/* === Section Titles === */
+.card h2 {
+  margin: 0 0 1rem 0;
+  padding: 1rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+/* Recommendation card look like the design: image top + white footer */
+.recommendation-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background: transparent;
+  box-shadow: none;
+}
+
+.recommendation-card img {
+  display: block;
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.recommendation-card .card-body {
+  background: var(--card-light);
+  padding: 0.85rem 1rem;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.recommendation-card .card-body h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.recommendation-card .card-body p {
+  margin: 0.35rem 0 0 0;
+  font-size: 0.85rem;
+  color: var(--subtle-light);
+}
+
+/* Recent activity — full width listing */
+.section-overview .activity-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.section-activity .activity-card {
+  width: 100%;
+  border: none;
+  background: var(--card-light);
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 4px rgba(16,24,40,0.04);
+}
+
+.activity-card h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+}
+
+.activity-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--subtle-light);
+}
+
+/* Quick actions + profile completion */
+.quick-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.btn {
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.profile-completion {
+  background: var(--card-light);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(16,24,40,0.04);
+}
+
+.progress-bar-simple {
+  width: 100%;
+  height: 12px;
+  background: var(--border-light);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.progress-fill-simple {
+  height: 100%;
+  background: var(--primary);
+  width: 60%;
+  transition: width 0.4s ease-in-out;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .recommendations-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .quick-actions {
+    flex-direction: column;
+  }
+  .sidebar {
+    display: none;
+  }
+}

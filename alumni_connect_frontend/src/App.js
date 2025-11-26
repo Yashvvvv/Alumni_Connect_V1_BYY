@@ -9,6 +9,8 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import StudentDashboard from './components/Student/StudentDashboard';
 import AlumniDashboard from './components/Alumni/AlumniDashboard';
+import AdminDashboard from './components/Admin/AdminDashboard';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -38,6 +40,26 @@ function App() {
                 <AlumniDashboard />
               </ProtectedRoute>
             } 
+          />
+
+          {/* Protected Routes - Admin */}
+          <Route
+            path="/AdminDashboard"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Profile (read-only) */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute allowedRoles={["student", "alumni", "admin"]}>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
           />
 
           {/* Catch all - redirect to home */}
