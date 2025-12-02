@@ -1,22 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const { protect, authorizeRoles } = require("../middleware/authMiddleware");
-const { registerUser, loginUser } = require("../controllers/authController");
+const express = require("express")
+const router = express.Router()
+const { register, login } = require("../controllers/authController")
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
+router.post("/register", register)
+router.post("/login", login)
 
-// Example protected routes:
-router.get("/student-dashboard", protect, authorizeRoles("student"), (req, res) => {
-  res.json({ message: "Welcome student!" });
-});
-
-router.get("/admin", protect, authorizeRoles("admin"), (req, res) => {
-  res.json({ message: "Welcome admin!" });
-});
-
-router.get("/alumni-section", protect, authorizeRoles("alumni", "admin"), (req, res) => {
-  res.json({ message: "Welcome alumni!" });
-});
-
-module.exports = router;
+module.exports = router

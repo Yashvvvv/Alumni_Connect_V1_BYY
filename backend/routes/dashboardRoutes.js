@@ -1,21 +1,10 @@
-const express = require("express");
-const router = express.Router();
+const express = require("express")
+const router = express.Router()
+const { protect, authorizeRoles } = require("../middleware/authMiddleware")
+const { getStudentDashboard, getAlumniDashboard, getAdminDashboard } = require("../controllers/dashboardController")
 
-const {
-  getStudentDashboard,
-  getAlumniDashboard,
-  getAdminDashboard,
-} = require("../controllers/dashboardController");
+router.get("/student", protect, authorizeRoles("student"), getStudentDashboard)
+router.get("/alumni", protect, authorizeRoles("alumni"), getAlumniDashboard)
+router.get("/admin", protect, authorizeRoles("admin"), getAdminDashboard)
 
-const { protect, authorizeRoles } = require("../middleware/authMiddleware");
-
-// Student Dashboard
-router.get("/student", protect, authorizeRoles("student"), getStudentDashboard);
-
-// Alumni Dashboard
-router.get("/alumni", protect, authorizeRoles("alumni"), getAlumniDashboard);
-
-// Admin Dashboard
-router.get("/admin", protect, authorizeRoles("admin"), getAdminDashboard);
-
-module.exports = router;
+module.exports = router
