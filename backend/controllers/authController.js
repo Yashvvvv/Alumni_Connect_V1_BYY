@@ -1,25 +1,17 @@
-const User = require("../models/User");
-const generateToken = require("../utils/generateToken");
+const User = require("../models/User")
+const generateToken = require("../utils/generateToken")
 
-// REGISTER USER
-const registerUser = async (req, res) => {
-  const { name, email, password, role } = req.body;
-
+exports.register = async (req, res) => {
   try {
-    const userExists = await User.findOne({ email });
-    if (userExists)
-      return res.status(400).json({ message: "User already exists" });
+    const { name, email, password, role } = req.body
 
-    // Automatically assign admin if it’s the first registered user
-    const isFirstUser = (await User.countDocuments()) === 0;
-    const assignedRole = isFirstUser ? 'admin' : role || 'student';
-    // create a new user
-    const user = await User.create({
-      name,
-      email,
-      password,
-      role: assignedRole,
-    });
+    const existingUser = await User.findOne({ email })
+    if (existingUser) return res.status(400).json({ message: "User already exists" })
+
+    const userCount = await User.countDocuments()
+    const assignedRole = userCount === 0 ? "admin" : role
+
+    const user = await User.create({ name, email, password, role: assignedRole })
 
     res.status(201).json({
       _id: user._id,
@@ -27,38 +19,29 @@ const registerUser = async (req, res) => {
       email: user.email,
       role: user.role,
       token: generateToken(user._id, user.role),
-    });
+    })
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ message: err.message })
   }
-};
+}
 
-// LOGIN USER
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
+exports.login = async (req, res) => {
   try {
-    const user = await User.findOne({ email });
-    if (!user)
-      return res.status(400).json({ message: "Invalid Credentials" });
+    const { email, password } = req.body
+    const user = await User.findOne({ email })
 
-    // Check password, this function is defined in User model
-    if (await user.matchPassword(password)) {
+    if (user && (await user.matchPassword(password))) {
       res.json({
         _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
         token: generateToken(user._id, user.role),
-      });
+      })
     } else {
-      return res.status(400).json({ message: "Invalid Credentials" });
+      res.status(401).json({ message: "Invalid credentials" })
     }
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ message: err.message })
   }
-};
-
-module.exports = { registerUser, loginUser };
+}
