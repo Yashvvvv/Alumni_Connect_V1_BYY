@@ -1,95 +1,110 @@
-<<<<<<< HEAD
 const Announcement = require("../models/Announcement");
+const User = require("../models/User");
 const sendNotification = require("../utils/sendNotification");
-const user = require("../models/User");
-=======
-const Announcement = require("../models/Announcement")
->>>>>>> c746aaad342961d5329e96f60e7c803e67420e79
 
+// ====================================
+// 1. Create Announcement
+// ====================================
 exports.createAnnouncement = async (req, res) => {
   try {
-    const { title, message, attachment } = req.body
+    const { title, message, attachment } = req.body;
+
     const announcement = await Announcement.create({
       title,
       message,
-      attachment,
+      attachment: attachment || null,
       createdBy: req.user._id,
       creatorRole: req.user.role,
-<<<<<<< HEAD
     });
 
     // 🔔 Notify all users
-    const allUsers = await user.find({});
+    const allUsers = await User.find({});
+    const io = req.app.get("io");
 
-    // const notifications = allUsers.map((u) => ({
-    //   user: u._id,
-    //   fromUser: req.user._id,
-    //   type: "announcement",
-    //   message: `New announcement: ${newAnnouncement.title}`,
-    // }));
-
-    // await Notification.insertMany(notifications);
-    for (const user of allUsers) {
-      await sendNotification(req, user._id, {
-        message: `New announcement: ${title}`,
-        type: "announcement",
-        fromUser: req.user._id
-      });
+    for (const u of allUsers) {
+      await sendNotification(
+        {
+          user: u._id,
+          fromUser: req.user._id,
+          type: "announcement",
+          message: `New announcement: ${title}`,
+        },
+        io
+      );
     }
 
     res.status(201).json({
       message: "Announcement created successfully",
-      announcement: newAnnouncement,
+      announcement,
     });
-
   } catch (error) {
-    res.status(500).json({ message: "Server Error", error: error.message });
-=======
-    })
-    res.status(201).json(announcement)
-  } catch (err) {
-    res.status(500).json({ message: err.message })
->>>>>>> c746aaad342961d5329e96f60e7c803e67420e79
+    console.error(error);
+    res.status(500).json({
+      message: "Server Error",
+      error: error.message,
+    });
   }
-}
+};
 
-<<<<<<< HEAD
-
-
-// Get all announcements (public for all logged-in users)
-=======
->>>>>>> c746aaad342961d5329e96f60e7c803e67420e79
+// ====================================
+// 2. Get All Announcements
+// ====================================
 exports.getAllAnnouncements = async (req, res) => {
   try {
-    const announcements = await Announcement.find().populate("createdBy", "name email").sort({ createdAt: -1 })
-    res.json(announcements)
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-  }
-}
+    const announcements = await Announcement.find()
+      .populate("createdBy", "name email role")
+      .sort({ createdAt: -1 });
 
+    res.status(200).json(announcements);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ====================================
+// 3. Get Announcement By ID
+// ====================================
 exports.getAnnouncementById = async (req, res) => {
   try {
-    const announcement = await Announcement.findById(req.params.id).populate("createdBy", "name email")
-    if (!announcement) return res.status(404).json({ message: "Announcement not found" })
-    res.json(announcement)
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-  }
-}
+    const announcement = await Announcement.findById(req.params.id).populate(
+      "createdBy",
+      "name email role"
+    );
 
+    if (!announcement)
+      return res.status(404).json({ message: "Announcement not found" });
+
+    res.status(200).json(announcement);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ====================================
+// 4. Delete Announcement
+// ====================================
 exports.deleteAnnouncement = async (req, res) => {
   try {
-    const announcement = await Announcement.findById(req.params.id)
-    if (!announcement) return res.status(404).json({ message: "Announcement not found" })
+    const announcement = await Announcement.findById(req.params.id);
 
-    if (announcement.createdBy.toString() !== req.user._id.toString() && req.user.role !== "admin") {
-      return res.status(403).json({ message: "Not authorized" })
+    if (!announcement)
+      return res.status(404).json({ message: "Announcement not found" });
+
+    // Only admin or creator can delete
+    if (
+      announcement.createdBy.toString() !== req.user._id.toString() &&
+      req.user.role !== "admin"
+    ) {
+      return res.status(403).json({ message: "Not authorized" });
     }
 
-    await announcement.deleteOne()
-    res.json({ message: "Announcement removed" })
+    await announcement.deleteOne();
+
+    res.status(200).json({ message: "Announcement removed" });
   } catch (err) {
-    res.status(500).json({ message: err.message })
+    console.error(err);
+    res.status(500).json({ message: err.message });
   }
-}
+};

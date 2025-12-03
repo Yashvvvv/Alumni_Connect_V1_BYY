@@ -8,7 +8,7 @@ const {
   updateEvent,
   deleteEvent,
   registerForEvent,
-  getEventParticipants,
+  getRegisteredUsers,
 } = require("../controllers/eventController")
 
 router.post("/", protect, authorizeRoles("admin", "alumni"), createEvent)
@@ -17,6 +17,7 @@ router.get("/:id", protect, getEventById)
 router.put("/:id", protect, authorizeRoles("admin", "alumni"), updateEvent)
 router.delete("/:id", protect, authorizeRoles("admin", "alumni"), deleteEvent)
 router.post("/:id/register", protect, authorizeRoles("student", "alumni"), registerForEvent)
-router.get("/:id/participants", protect, authorizeRoles("admin", "alumni"), getEventParticipants)
+router.get("/:id/participants", protect, authorizeRoles("admin", "alumni"), getRegisteredUsers)
+
 
 module.exports = router

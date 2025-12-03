@@ -1,8 +1,9 @@
-<<<<<<< HEAD
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
+
+// Routes
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const profileRoutes = require("./routes/profileRoutes");
@@ -14,9 +15,10 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const externalRoutes = require("./routes/externalRoutes");
 
-const http = require('http');
-const {Server} = require('socket.io');
+const http = require("http");
+const { Server } = require("socket.io");
 
 // Load environment variables
 dotenv.config();
@@ -33,96 +35,69 @@ app.use("/api/users", userRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/connections", connectionRoutes);
-app.use('/api/events', eventRoutes);
+app.use("/api/events", eventRoutes);
 app.use("/api/announcements", announcementRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/external", externalRoutes);
 
-// Create HTTP server, and setup Socket.io for real-time features
+// Create HTTP server
 const server = http.createServer(app);
 
-// Setup Socket.io, allowing CORS from any origin and GET, POST methods, allowing real-time communication
-const io =  new Server(server, {
-    cors:{
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
+// Setup Socket.io (real-time communication)
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
 });
 
-// Store online users in memory, mapping userId to socketId
+// Store online users
 global.onlineUsers = {};
 
 io.on("connection", (socket) => {
-    console.log("User Connected: ", socket.id);
+  console.log("User Connected:", socket.id);
 
-    // --- 1. When a user joins ---
-    socket.on("join", (userId) => {
-        onlineUsers[userId] = socket.id;
-        console.log("Online Users =>", onlineUsers);
-    });
+  // --- 1. User joins ---
+  socket.on("join", (userId) => {
+    onlineUsers[userId] = socket.id;
+    console.log("Online Users:", onlineUsers);
+  });
 
-    // --- 2. Real-time Chat Message Event ---
-    socket.on("send_message", (data) => {
-        console.log("📩 Incoming Message:", data);
+  // --- 2. Real-Time Chat ---
+  socket.on("send_message", (data) => {
+    console.log("📩 Incoming Message:", data);
 
-        const receiverSocket = onlineUsers[data.receiverId];
+    const receiverSocket = onlineUsers[data.receiverId];
 
-        if (receiverSocket) {
-            // Send message instantly to receiver
-            io.to(receiverSocket).emit("new_message", data);
-            console.log("📤 Message sent to:", receiverSocket);
-        } else {
-            console.log("⚠ Receiver offline → message saved only in DB");
-        }
-    });
+    if (receiverSocket) {
+      io.to(receiverSocket).emit("new_message", data);
+      console.log("📤 Message sent to:", receiverSocket);
+    } else {
+      console.log("⚠ Receiver offline → message saved only in DB");
+    }
+  });
 
-    // --- 3. When user disconnects ---
-    socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
+  // --- 3. Disconnect handler ---
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
 
-        for (const id in onlineUsers) {
-            if (onlineUsers[id] === socket.id) {
-                delete onlineUsers[id];
-                break;
-            }
-        }
-    });
+    for (const id in onlineUsers) {
+      if (onlineUsers[id] === socket.id) {
+        delete onlineUsers[id];
+        break;
+      }
+    }
+  });
 });
 
-
-// Make io accessible to routes and accessible in controllers
+// Make io available in controllers
 app.set("io", io);
 
-// Start Server, and listen on specified PORT
+// Start server
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-=======
-const express = require("express")
-const cors = require("cors")
-const dotenv = require("dotenv")
-const connectDB = require("./config/db")
-
-dotenv.config()
-connectDB()
-
-const app = express()
-
-app.use(cors())
-app.use(express.json())
-
-// Routes
-app.use("/api/auth", require("./routes/authRoutes"))
-app.use("/api/users", require("./routes/userRoutes"))
-app.use("/api/profile", require("./routes/profileRoutes"))
-app.use("/api/connections", require("./routes/connectionRoutes"))
-app.use("/api/jobs", require("./routes/jobRoutes"))
-app.use("/api/events", require("./routes/eventRoutes"))
-app.use("/api/announcements", require("./routes/announcementRoutes"))
-app.use("/api/dashboard", require("./routes/dashboardRoutes"))
-app.use("/api/external", require("./routes/externalRoutes"))
-
-const PORT = process.env.PORT || 5000
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
->>>>>>> c746aaad342961d5329e96f60e7c803e67420e79
+server.listen(PORT, () =>
+  console.log(`Server running on port ${PORT}`)
+);
