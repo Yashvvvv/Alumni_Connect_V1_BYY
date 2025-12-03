@@ -1,4 +1,6 @@
 const Announcement = require("../models/Announcement");
+const sendNotification = require("../utils/sendNotification");
+const user = require("../models/User");
 
 // Create Announcement (ADMIN + ALUMNI)
 exports.createAnnouncement = async (req, res) => {
@@ -13,14 +15,35 @@ exports.createAnnouncement = async (req, res) => {
       creatorRole: req.user.role,
     });
 
-    res
-      .status(201)
-      .json({ message: "Announcement created successfully", announcement: newAnnouncement });
+    // 🔔 Notify all users
+    const allUsers = await user.find({});
+
+    // const notifications = allUsers.map((u) => ({
+    //   user: u._id,
+    //   fromUser: req.user._id,
+    //   type: "announcement",
+    //   message: `New announcement: ${newAnnouncement.title}`,
+    // }));
+
+    // await Notification.insertMany(notifications);
+    for (const user of allUsers) {
+      await sendNotification(req, user._id, {
+        message: `New announcement: ${title}`,
+        type: "announcement",
+        fromUser: req.user._id
+      });
+    }
+
+    res.status(201).json({
+      message: "Announcement created successfully",
+      announcement: newAnnouncement,
+    });
 
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+
 
 
 // Get all announcements (public for all logged-in users)
