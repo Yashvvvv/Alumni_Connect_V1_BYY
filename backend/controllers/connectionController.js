@@ -1,28 +1,39 @@
+<<<<<<< HEAD
 const Connection = require('../models/Connection');
 const user = require('../models/User');
 const NotificationModel = require("../models/Notification");
 const sendNotification = require("../utils/sendNotification");
 
+=======
+const Connection = require("../models/Connection")
+>>>>>>> c746aaad342961d5329e96f60e7c803e67420e79
 
-// Send a connection request
 exports.sendRequest = async (req, res) => {
   try {
-    const { recipientId } = req.body;
+    const { recipientId } = req.body
 
-    if (recipientId === req.user.id) {
-      return res.status(400).send("You cannot send a connection request to yourself.");
-    }
+    const existing = await Connection.findOne({
+      $or: [
+        { requester: req.user._id, recipient: recipientId },
+        { requester: recipientId, recipient: req.user._id },
+      ],
+    })
 
+<<<<<<< HEAD
     const recipient = await user.findById(recipientId);
     if (!recipient) {
       return res.status(404).send("Recipient user not found.");
     }
+=======
+    if (existing) return res.status(400).json({ message: "Connection already exists or pending" })
+>>>>>>> c746aaad342961d5329e96f60e7c803e67420e79
 
-    const existingConnection = await Connection.findOne({
-      requester: req.user.id,
+    const connection = await Connection.create({
+      requester: req.user._id,
       recipient: recipientId,
-    });
+    })
 
+<<<<<<< HEAD
     if (existingConnection) {
       return res.status(400).send("Connection request already exists.");
     }
@@ -48,10 +59,20 @@ exports.sendRequest = async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ message: "Server error.", error: error.message });
+=======
+    res.status(201).json(connection)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+>>>>>>> c746aaad342961d5329e96f60e7c803e67420e79
   }
-};
+}
 
+exports.acceptRequest = async (req, res) => {
+  try {
+    const connection = await Connection.findById(req.params.id)
+    if (!connection) return res.status(404).json({ message: "Request not found" })
 
+<<<<<<< HEAD
 
 // Accept a connection request
 exports.acceptRequest = async (req, res) => {
@@ -105,8 +126,38 @@ exports.rejectRequest = async (req, res) => {
     res.status(500).json({ message: "Server error.", error: error.message });
   }
 };
+=======
+    if (connection.recipient.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized" })
+    }
 
+    connection.status = "accepted"
+    await connection.save()
+    res.json(connection)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
 
+exports.rejectRequest = async (req, res) => {
+  try {
+    const connection = await Connection.findById(req.params.id)
+    if (!connection) return res.status(404).json({ message: "Request not found" })
+
+    if (connection.recipient.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized" })
+    }
+>>>>>>> c746aaad342961d5329e96f60e7c803e67420e79
+
+    connection.status = "rejected"
+    await connection.save()
+    res.json(connection)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
+
+<<<<<<< HEAD
 // Get all connection requests for the logged-in user and get all my connections
 exports.getConnections = async (req, res) => {
   try {
@@ -124,19 +175,32 @@ exports.getConnections = async (req, res) => {
     res.status(500).json({ message: "Server error.", error: error.message });
   }
 };
+=======
+exports.getMyConnections = async (req, res) => {
+  try {
+    const connections = await Connection.find({
+      $or: [{ requester: req.user._id }, { recipient: req.user._id }],
+      status: "accepted",
+    })
+      .populate("requester", "name email role")
+      .populate("recipient", "name email role")
 
-// Get all pending connection requests for the logged-in user
+    res.json(connections)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
+>>>>>>> c746aaad342961d5329e96f60e7c803e67420e79
+
 exports.getPendingRequests = async (req, res) => {
   try {
-    const pending = await Connection.find({
+    const requests = await Connection.find({
       recipient: req.user._id,
       status: "pending",
-    })
-      .populate("requester", "name email role");
+    }).populate("requester", "name email role")
 
-    res.json({ pending });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error", error: error.message });
+    res.json(requests)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
   }
-};
+}

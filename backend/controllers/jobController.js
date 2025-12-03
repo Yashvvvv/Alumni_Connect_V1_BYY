@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const Job = require('../models/Job');
 const sendNotification = require('../utils/sendNotification');
 const User = require('../models/User');
@@ -40,9 +41,57 @@ exports.createJob = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server Error", error: error.message });
-    }
-};
+=======
+const Job = require("../models/Job")
 
+exports.createJob = async (req, res) => {
+  try {
+    const { title, company, description, skillsRequired, location, type } = req.body
+    const job = await Job.create({
+      title,
+      company,
+      description,
+      skillsRequired,
+      location,
+      type,
+      postedBy: req.user._id,
+    })
+    res.status(201).json(job)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
+
+exports.getAllJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find({ approved: true }).populate("postedBy", "name email").sort({ createdAt: -1 })
+    res.json(jobs)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
+
+exports.getJobById = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id).populate("postedBy", "name email")
+    if (!job) return res.status(404).json({ message: "Job not found" })
+    res.json(job)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
+
+exports.applyToJob = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id)
+    if (!job) return res.status(404).json({ message: "Job not found" })
+
+    if (job.applicants.includes(req.user._id)) {
+      return res.status(400).json({ message: "Already applied" })
+>>>>>>> c746aaad342961d5329e96f60e7c803e67420e79
+    }
+
+<<<<<<< HEAD
 
 
 // Get all jobs(filtering and pagination can be added later)
@@ -163,3 +212,21 @@ exports.myPostedJobs = async (req, res) => {
 // Get jobs posted by logged-in alumni
 // Search with filters
 // Prevent duplicate applications i.e. a student cannot apply to the same job more than once
+=======
+    job.applicants.push(req.user._id)
+    await job.save()
+    res.json({ message: "Applied successfully" })
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
+
+exports.getMyPostedJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find({ postedBy: req.user._id }).sort({ createdAt: -1 })
+    res.json(jobs)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
+>>>>>>> c746aaad342961d5329e96f60e7c803e67420e79

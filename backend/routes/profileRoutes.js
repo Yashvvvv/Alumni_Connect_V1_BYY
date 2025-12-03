@@ -1,27 +1,16 @@
-const express = require('express');
-const router = express.Router();
-
+const express = require("express")
+const router = express.Router()
+const { protect, authorizeRoles } = require("../middleware/authMiddleware")
 const {
-    createOrUpdateProfile,
-    getMyProfile,
-    getProfileById,
-    searchProfiles,
-} = require('../controllers/profileController');
+  createOrUpdateProfile,
+  getMyProfile,
+  getProfileByUserId,
+  searchProfiles,
+} = require("../controllers/profileController")
 
+router.post("/", protect, authorizeRoles("student", "alumni", "admin"), createOrUpdateProfile)
+router.get("/me", protect, getMyProfile)
+router.get("/search", protect, searchProfiles)
+router.get("/user/:id", protect, getProfileByUserId)
 
-const {protect, authorizeRoles} =  require('../middleware/authMiddleware');
-
-
-// Create or Update Profile(student + Alumni)
-router.post("/", protect, authorizeRoles("student", "alumni"), createOrUpdateProfile);
-
-// Get My Profile
-router.get("/me", protect, getMyProfile);
-
-// Get Profile by User ID
-router.get("/user/:id", protect, getProfileById);
-
-// Search Profiles
-router.get("/search", protect, searchProfiles);
-
-module.exports = router;
+module.exports = router
