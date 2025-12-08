@@ -39,10 +39,13 @@ export default function EventsPage() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const data = (await eventAPI.getAll()) as Event[]
-        setEvents(data)
+        const res = await eventAPI.getAll()
+        // Backend returns { events: [...] }
+        const eventsData = (res as any).events || res
+        setEvents(Array.isArray(eventsData) ? eventsData : [])
       } catch (error) {
         console.error("Failed to fetch events:", error)
+        setEvents([])
       } finally {
         setLoading(false)
       }
@@ -87,17 +90,17 @@ export default function EventsPage() {
     <ProtectedRoute>
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              <Calendar className="h-8 w-8 text-purple-600" />
+            <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3">
+              <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600" />
               Events
             </h1>
-            <p className="text-muted-foreground mt-1">Discover networking events, webinars, and tech conferences</p>
+            <p className="text-sm sm:text-base text-muted-foreground mt-1">Discover networking events, webinars, and tech conferences</p>
           </div>
           {(user?.role === "alumni" || user?.role === "admin") && (
-            <Link href="/events/create">
-              <Button>
+            <Link href="/events/create" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto">
                 <Plus className="h-4 w-4 mr-2" />
                 Create Event
               </Button>
@@ -106,25 +109,25 @@ export default function EventsPage() {
         </div>
 
         {/* Tab Toggle */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6">
           <Button
             variant={activeTab === "community" ? "default" : "outline"}
             onClick={() => setActiveTab("community")}
-            className="flex items-center gap-2"
+            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
           >
-            <Users className="h-4 w-4" />
-            Community Events
-            <Badge variant="secondary" className="ml-1">{events.length}</Badge>
+            <Users className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">Community</span> Events
+            <Badge variant="secondary" className="ml-1 text-xs">{events.length}</Badge>
           </Button>
           <Button
             variant={activeTab === "external" ? "default" : "outline"}
             onClick={() => setActiveTab("external")}
-            className="flex items-center gap-2"
+            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
           >
-            <Globe className="h-4 w-4" />
-            India Events
+            <Globe className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">India</span> Events
             {externalEvents.length > 0 && (
-              <Badge variant="secondary" className="ml-1">{externalEvents.length}</Badge>
+              <Badge variant="secondary" className="ml-1 text-xs">{externalEvents.length}</Badge>
             )}
           </Button>
           {activeTab === "external" && (
@@ -145,7 +148,7 @@ export default function EventsPage() {
           placeholder="Search events..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="mb-6 max-w-md"
+          className="mb-6 w-full sm:max-w-md"
         />
 
         {/* Community Events Tab */}

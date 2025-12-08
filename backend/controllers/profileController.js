@@ -42,6 +42,11 @@ exports.searchProfiles = async (req, res) => {
     const { role, skill, industry, batch } = req.query
     const query = {}
 
+    // Exclude the current logged-in user from results
+    if (req.user && req.user._id) {
+      query.user = { $ne: req.user._id }
+    }
+
     if (skill) query.skills = { $in: [skill] }
     if (industry) query.industry = industry
     if (batch) query.batch = batch
@@ -49,7 +54,7 @@ exports.searchProfiles = async (req, res) => {
     let profiles = await Profile.find(query).populate("user", "name email role")
 
     if (role) {
-      profiles = profiles.filter((p) => p.user.role === role)
+      profiles = profiles.filter((p) => p.user && p.user.role === role)
     }
 
     res.json(profiles)

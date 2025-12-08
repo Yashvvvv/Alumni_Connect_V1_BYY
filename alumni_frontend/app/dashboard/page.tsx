@@ -189,39 +189,39 @@ export default function DashboardPage() {
 
   const renderAdminDashboard = (data: AdminDashboard) => (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-5">
+      <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
         <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
-          <CardContent className="p-4">
-            <Users className="h-8 w-8 mb-2 opacity-80" />
-            <div className="text-2xl font-bold">{data.totalUsers}</div>
+          <CardContent className="p-3 sm:p-4">
+            <Users className="h-6 w-6 sm:h-8 sm:w-8 mb-2 opacity-80" />
+            <div className="text-xl sm:text-2xl font-bold">{data.totalUsers}</div>
             <p className="text-xs opacity-80">Total Users</p>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white">
-          <CardContent className="p-4">
-            <BookOpen className="h-8 w-8 mb-2 opacity-80" />
-            <div className="text-2xl font-bold">{data.students}</div>
+          <CardContent className="p-3 sm:p-4">
+            <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 mb-2 opacity-80" />
+            <div className="text-xl sm:text-2xl font-bold">{data.students}</div>
             <p className="text-xs opacity-80">Students</p>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white">
-          <CardContent className="p-4">
-            <GraduationCap className="h-8 w-8 mb-2 opacity-80" />
-            <div className="text-2xl font-bold">{data.alumni}</div>
+          <CardContent className="p-3 sm:p-4">
+            <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 mb-2 opacity-80" />
+            <div className="text-xl sm:text-2xl font-bold">{data.alumni}</div>
             <p className="text-xs opacity-80">Alumni</p>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-br from-amber-500 to-amber-600 text-white">
-          <CardContent className="p-4">
-            <Briefcase className="h-8 w-8 mb-2 opacity-80" />
-            <div className="text-2xl font-bold">{data.totalJobs}</div>
+          <CardContent className="p-3 sm:p-4">
+            <Briefcase className="h-6 w-6 sm:h-8 sm:w-8 mb-2 opacity-80" />
+            <div className="text-xl sm:text-2xl font-bold">{data.totalJobs}</div>
             <p className="text-xs opacity-80">Total Jobs</p>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-rose-500 to-rose-600 text-white">
-          <CardContent className="p-4">
-            <Calendar className="h-8 w-8 mb-2 opacity-80" />
-            <div className="text-2xl font-bold">{data.totalEvents}</div>
+        <Card className="bg-gradient-to-br from-rose-500 to-rose-600 text-white col-span-2 sm:col-span-1">
+          <CardContent className="p-3 sm:p-4">
+            <Calendar className="h-6 w-6 sm:h-8 sm:w-8 mb-2 opacity-80" />
+            <div className="text-xl sm:text-2xl font-bold">{data.totalEvents}</div>
             <p className="text-xs opacity-80">Total Events</p>
           </CardContent>
         </Card>
@@ -258,18 +258,18 @@ export default function DashboardPage() {
     <ProtectedRoute>
       <div className="min-h-[calc(100vh-64px)] bg-gray-50">
         {/* Header Banner */}
-        <div className="bg-slate-900 text-white py-8">
+        <div className="bg-slate-900 text-white py-6 sm:py-8">
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold">Welcome back, {user?.name}!</h1>
-                <p className="text-slate-400 mt-1">Here&apos;s what&apos;s happening in your network.</p>
+                <h1 className="text-2xl sm:text-3xl font-bold">Welcome back, {user?.name}!</h1>
+                <p className="text-slate-400 mt-1 text-sm sm:text-base">Here&apos;s what&apos;s happening in your network.</p>
               </div>
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 bg-white/10 rounded-lg px-4 py-2">
-                  {user?.role === "student" && <BookOpen className="h-5 w-5 text-blue-400" />}
-                  {user?.role === "alumni" && <GraduationCap className="h-5 w-5 text-green-400" />}
-                  {user?.role === "admin" && <Award className="h-5 w-5 text-amber-400" />}
+                <div className="flex items-center gap-2 bg-white/10 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base">
+                  {user?.role === "student" && <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />}
+                  {user?.role === "alumni" && <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />}
+                  {user?.role === "admin" && <Award className="h-4 w-4 sm:h-5 sm:w-5 text-amber-400" />}
                   <span className="capitalize">{user?.role}</span>
                 </div>
               </div>
@@ -294,11 +294,11 @@ export default function DashboardPage() {
 
               {/* Quick Actions */}
               <div>
-                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-blue-600" />
+                <h2 className="text-lg sm:text-xl font-semibold mb-4 flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
                   Quick Actions
                 </h2>
-                <div className="grid md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {user?.role === "student" ? (
                     <>
                       <Link href="/jobs">
