@@ -24,7 +24,7 @@ export default function HomePage() {
         <div className="absolute bottom-20 right-10 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl"></div>
         <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-green-500/10 rounded-full blur-2xl"></div>
         
-        <div className="container px-4 py-20 relative">
+        <div className="container mx-auto px-4 py-20 relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 mb-6 backdrop-blur-sm">
@@ -122,7 +122,7 @@ export default function HomePage() {
 
       {/* Features Section with Custom Illustrations */}
       <section className="py-20 bg-white">
-        <div className="container px-4">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Everything You Need to Succeed</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -130,11 +130,11 @@ export default function HomePage() {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {/* Network Card */}
             <Card className="border-2 border-gray-100 hover:border-blue-200 hover:shadow-xl transition-all group">
               <CardContent className="p-6 text-center">
-                <div className="w-20 h-20 mx-auto mb-4">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4">
                   <svg viewBox="0 0 80 80" className="w-full h-full">
                     <circle cx="40" cy="30" r="12" fill="#3B82F6"/>
                     <circle cx="20" cy="55" r="8" fill="#93C5FD"/>
@@ -152,7 +152,7 @@ export default function HomePage() {
             {/* Jobs Card */}
             <Card className="border-2 border-gray-100 hover:border-green-200 hover:shadow-xl transition-all group">
               <CardContent className="p-6 text-center">
-                <div className="w-20 h-20 mx-auto mb-4">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4">
                   <svg viewBox="0 0 80 80" className="w-full h-full">
                     <rect x="15" y="25" width="50" height="35" rx="4" fill="#22C55E"/>
                     <rect x="28" y="18" width="24" height="10" rx="2" fill="#86EFAC"/>
@@ -171,7 +171,7 @@ export default function HomePage() {
             {/* Events Card */}
             <Card className="border-2 border-gray-100 hover:border-purple-200 hover:shadow-xl transition-all group">
               <CardContent className="p-6 text-center">
-                <div className="w-20 h-20 mx-auto mb-4">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4">
                   <svg viewBox="0 0 80 80" className="w-full h-full">
                     <rect x="15" y="22" width="50" height="40" rx="4" fill="#A855F7"/>
                     <rect x="15" y="22" width="50" height="12" rx="4" fill="#C084FC"/>
@@ -192,7 +192,7 @@ export default function HomePage() {
             {/* Mentorship Card */}
             <Card className="border-2 border-gray-100 hover:border-amber-200 hover:shadow-xl transition-all group">
               <CardContent className="p-6 text-center">
-                <div className="w-20 h-20 mx-auto mb-4">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4">
                   <svg viewBox="0 0 80 80" className="w-full h-full">
                     <path d="M40 15 L48 35 L70 37 L54 52 L58 74 L40 64 L22 74 L26 52 L10 37 L32 35 Z" fill="#F59E0B"/>
                     <circle cx="40" cy="42" r="12" fill="#FCD34D"/>
@@ -211,16 +211,16 @@ export default function HomePage() {
 
       {/* How It Works Section */}
       <section className="py-20 bg-gray-50">
-        <div className="container px-4">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
             <p className="text-lg text-gray-600">Get started in three simple steps</p>
           </div>
           
           <div className="max-w-5xl mx-auto">
-            <div className="grid md:grid-cols-3 gap-8 relative">
-              {/* Connecting Line */}
-              <div className="hidden md:block absolute top-16 left-1/4 right-1/4 h-0.5 bg-gray-200"></div>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 relative">
+              {/* Connecting Line - Only on md and above */}
+              <div className="hidden md:block absolute top-16 left-[calc(16.67%+64px)] right-[calc(16.67%+64px)] h-0.5 bg-gray-200"></div>
               
               {/* Step 1 */}
               <div className="text-center relative">
@@ -278,35 +278,35 @@ export default function HomePage() {
 
       {/* Stats Section */}
       <section className="py-16 bg-slate-900 text-white">
-        <div className="container px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center p-6">
-              <div className="w-16 h-16 mx-auto mb-4 bg-blue-500/20 rounded-2xl flex items-center justify-center">
-                <Users className="h-8 w-8 text-blue-400" />
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+            <div className="text-center p-4 md:p-6">
+              <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 bg-blue-500/20 rounded-xl md:rounded-2xl flex items-center justify-center">
+                <Users className="h-6 w-6 md:h-8 md:w-8 text-blue-400" />
               </div>
-              <p className="text-4xl font-bold mb-1">10,000+</p>
-              <p className="text-slate-400">Active Members</p>
+              <p className="text-2xl md:text-4xl font-bold mb-1">10,000+</p>
+              <p className="text-slate-400 text-xs md:text-base">Active Members</p>
             </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 mx-auto mb-4 bg-green-500/20 rounded-2xl flex items-center justify-center">
-                <Building className="h-8 w-8 text-green-400" />
+            <div className="text-center p-4 md:p-6">
+              <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 bg-green-500/20 rounded-xl md:rounded-2xl flex items-center justify-center">
+                <Building className="h-6 w-6 md:h-8 md:w-8 text-green-400" />
               </div>
-              <p className="text-4xl font-bold mb-1">500+</p>
-              <p className="text-slate-400">Partner Companies</p>
+              <p className="text-2xl md:text-4xl font-bold mb-1">500+</p>
+              <p className="text-slate-400 text-xs md:text-base">Partner Companies</p>
             </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 mx-auto mb-4 bg-purple-500/20 rounded-2xl flex items-center justify-center">
-                <Briefcase className="h-8 w-8 text-purple-400" />
+            <div className="text-center p-4 md:p-6">
+              <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 bg-purple-500/20 rounded-xl md:rounded-2xl flex items-center justify-center">
+                <Briefcase className="h-6 w-6 md:h-8 md:w-8 text-purple-400" />
               </div>
-              <p className="text-4xl font-bold mb-1">1,200+</p>
-              <p className="text-slate-400">Jobs Posted</p>
+              <p className="text-2xl md:text-4xl font-bold mb-1">1,200+</p>
+              <p className="text-slate-400 text-xs md:text-base">Jobs Posted</p>
             </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 mx-auto mb-4 bg-amber-500/20 rounded-2xl flex items-center justify-center">
-                <Calendar className="h-8 w-8 text-amber-400" />
+            <div className="text-center p-4 md:p-6">
+              <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 bg-amber-500/20 rounded-xl md:rounded-2xl flex items-center justify-center">
+                <Calendar className="h-6 w-6 md:h-8 md:w-8 text-amber-400" />
               </div>
-              <p className="text-4xl font-bold mb-1">50+</p>
-              <p className="text-slate-400">Events Per Year</p>
+              <p className="text-2xl md:text-4xl font-bold mb-1">50+</p>
+              <p className="text-slate-400 text-xs md:text-base">Events Per Year</p>
             </div>
           </div>
         </div>
@@ -314,7 +314,7 @@ export default function HomePage() {
 
       {/* Benefits Section */}
       <section className="py-20 bg-white">
-        <div className="container px-4">
+        <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Benefits List */}
             <div>
@@ -385,7 +385,7 @@ export default function HomePage() {
           </svg>
         </div>
         
-        <div className="container px-4 text-center relative">
+        <div className="container mx-auto px-4 text-center relative">
           <div className="max-w-3xl mx-auto">
             <div className="w-20 h-20 mx-auto mb-6 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
               <Zap className="h-10 w-10 text-white" />
@@ -394,15 +394,15 @@ export default function HomePage() {
             <p className="text-blue-100 mb-8 text-lg max-w-xl mx-auto">
               Join thousands of alumni and students building their professional network today.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link href="/register">
-                <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50 h-12 px-8">
+                <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50 h-12 px-8 w-full sm:w-auto">
                   Create Your Account
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/login">
-                <Button size="lg" variant="outline" className="border-white/30 text-blue-700 hover:bg-blue-50 h-12 px-8">
+                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 h-12 px-8">
                   Sign In Instead
                 </Button>
               </Link>
@@ -413,9 +413,9 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="bg-slate-900 text-slate-400 py-12">
-        <div className="container px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+            <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-4">
                 <GraduationCap className="h-6 w-6 text-blue-400" />
                 <span className="text-white font-bold text-lg">AlumniConnect</span>
@@ -437,7 +437,7 @@ export default function HomePage() {
                 <li><Link href="/connections" className="hover:text-white transition-colors">Network</Link></li>
               </ul>
             </div>
-            <div>
+            <div className="col-span-2 md:col-span-1">
               <h4 className="text-white font-semibold mb-4">Connect With Us</h4>
               <div className="flex gap-3">
                 <a href="#" className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center hover:bg-slate-700 transition-colors">

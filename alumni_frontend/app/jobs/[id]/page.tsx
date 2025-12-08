@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
 import { ProtectedRoute } from "@/components/protected-route"
 import { jobAPI } from "@/lib/api"
@@ -9,10 +9,11 @@ import type { Job } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { MapPin, Building, User, AlertCircle } from "lucide-react"
+import { MapPin, Building, User, AlertCircle, Trash2 } from "lucide-react"
 
 export default function JobDetailPage() {
   const { id } = useParams()
+  const router = useRouter()
   const { user } = useAuth()
 
   const [job, setJob] = useState<Job | null>(null)
@@ -21,6 +22,8 @@ export default function JobDetailPage() {
   const [applied, setApplied] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [applyError, setApplyError] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
 
   const jobId = typeof id === "string" ? id : Array.isArray(id) ? id[0] : ""
 
@@ -92,6 +95,30 @@ export default function JobDetailPage() {
       setApplying(false)
     }
   }
+
+  const handleDelete = async () => {
+    if (!jobId) return
+    if (!confirm("Are you sure you want to delete this job? This action cannot be undone.")) return
+    
+    setDeleting(true)
+    setDeleteError(null)
+
+    try {
+      await jobAPI.delete(jobId)
+      router.push("/jobs")
+    } catch (err: any) {
+      console.error("Failed to delete job:", err)
+      setDeleteError(err?.message || "Failed to delete this job. Please try again.")
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  // Check if user can delete (admin or job owner)
+  const canDelete = user && job && (
+    user.role === "admin" || 
+    (job.postedBy && job.postedBy._id === user._id)
+  )
 
   // ------------------ LOADING SKELETON ------------------
   if (loading) {
@@ -239,6 +266,23 @@ export default function JobDetailPage() {
                 </Button>
                 {applyError && (
                   <p className="text-sm text-destructive text-center">{applyError}</p>
+                )}
+              </div>
+            )}
+
+            {canDelete && (
+              <div className="space-y-2 pt-4 border-t">
+                <Button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  variant="destructive"
+                  className="w-full"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  {deleting ? "Deleting..." : "Delete Job"}
+                </Button>
+                {deleteError && (
+                  <p className="text-sm text-destructive text-center">{deleteError}</p>
                 )}
               </div>
             )}

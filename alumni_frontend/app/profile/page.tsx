@@ -141,7 +141,7 @@ export default function ProfilePage() {
                           placeholder="Google" 
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label>Years of Experience</Label>
                           <Input
@@ -169,7 +169,7 @@ export default function ProfilePage() {
                 <>
                   <div className="border-t pt-4 mt-4">
                     <h3 className="font-medium mb-4">Academic Information</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label>Current Course</Label>
                         <Input

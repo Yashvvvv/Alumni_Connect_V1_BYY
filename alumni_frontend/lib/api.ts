@@ -110,6 +110,11 @@ export const jobAPI = {
     }),
 
   getMyPosted: () => fetchAPI<MyPostedJobsResponse>("/jobs/me/posted"),
+
+  delete: (id: string) =>
+    fetchAPI<{ message: string }>(`/jobs/${id}`, {
+      method: "DELETE",
+    }),
 }
 
 // --------------------------------------
@@ -158,6 +163,8 @@ export const connectionAPI = {
   getAll: () => fetchAPI("/connections"),
 
   getPending: () => fetchAPI("/connections/pending"),
+
+  checkStatus: (userId: string) => fetchAPI<{ status: string; connectionId?: string; isPendingForMe?: boolean }>(`/connections/status/${userId}`),
 }
 
 // --------------------------------------
@@ -185,4 +192,52 @@ export const dashboardAPI = {
   getStudent: () => fetchAPI("/dashboard/student"),
   getAlumni: () => fetchAPI("/dashboard/alumni"),
   getAdmin: () => fetchAPI("/dashboard/admin"),
+}
+
+// --------------------------------------
+// CHAT API
+// --------------------------------------
+export const chatAPI = {
+  sendMessage: (receiverId: string, message: string) =>
+    fetchAPI("/chat", {
+      method: "POST",
+      body: JSON.stringify({ receiverId, message }),
+    }),
+
+  getMessages: (userId: string) => fetchAPI(`/chat/${userId}`),
+
+  markAsRead: (userId: string) =>
+    fetchAPI(`/chat/${userId}/read`, { method: "PUT" }),
+
+  getChatUsers: () => fetchAPI<{ users: Array<{ _id: string; name: string; email: string; role: string }> }>("/chat/list/all"),
+}
+
+// --------------------------------------
+// NOTIFICATIONS API
+// --------------------------------------
+export const notificationAPI = {
+  getAll: () => fetchAPI<{ notifications: Array<any> }>("/notifications"),
+
+  markAsRead: (id: string) =>
+    fetchAPI(`/notifications/${id}/read`, { method: "PUT" }),
+
+  markAllAsRead: () =>
+    fetchAPI("/notifications/read-all", { method: "PUT" }),
+}
+
+// --------------------------------------
+// GLOBAL SEARCH API
+// --------------------------------------
+export const searchAPI = {
+  global: (query: string) =>
+    fetchAPI<{
+      query: string
+      result: {
+        users: Array<any>
+        profiles: Array<any>
+        jobs: Array<any>
+        events: Array<any>
+        announcements: Array<any>
+      }
+    }>(`/search?query=${encodeURIComponent(query)}`),
 }

@@ -166,3 +166,37 @@ exports.getPendingRequests = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+// ============================
+// 6. Check Connection Status with a User
+// ============================
+exports.checkConnectionStatus = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    const connection = await Connection.findOne({
+      $or: [
+        { requester: req.user._id, recipient: userId },
+        { requester: userId, recipient: req.user._id },
+      ],
+    });
+
+    if (!connection) {
+      return res.json({ status: "none" });
+    }
+
+    // Check if current user is the recipient of a pending request
+    const isPendingForMe = 
+      connection.status === "pending" && 
+      connection.recipient.toString() === req.user._id.toString();
+
+    res.json({ 
+      status: connection.status,
+      connectionId: connection._id,
+      isPendingForMe 
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
