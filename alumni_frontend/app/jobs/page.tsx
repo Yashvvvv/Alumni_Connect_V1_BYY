@@ -100,17 +100,17 @@ export default function JobsPage() {
     <ProtectedRoute>
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              <Briefcase className="h-8 w-8 text-blue-600" />
+            <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3">
+              <Briefcase className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
               Job Opportunities
             </h1>
-            <p className="text-muted-foreground mt-1">Discover career opportunities from our community and around the web</p>
+            <p className="text-sm sm:text-base text-muted-foreground mt-1">Discover career opportunities from our community and around the web</p>
           </div>
           {(user?.role === "alumni" || user?.role === "admin") && (
-            <Link href="/jobs/create">
-              <Button>
+            <Link href="/jobs/create" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto">
                 <Plus className="h-4 w-4 mr-2" />
                 Post Job
               </Button>
@@ -119,25 +119,25 @@ export default function JobsPage() {
         </div>
 
         {/* Tab Toggle */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6">
           <Button
             variant={activeTab === "community" ? "default" : "outline"}
             onClick={() => setActiveTab("community")}
-            className="flex items-center gap-2"
+            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
           >
-            <Building className="h-4 w-4" />
-            Community Jobs
-            <Badge variant="secondary" className="ml-1">{jobs.length}</Badge>
+            <Building className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">Community</span> Jobs
+            <Badge variant="secondary" className="ml-1 text-xs">{jobs.length}</Badge>
           </Button>
           <Button
             variant={activeTab === "external" ? "default" : "outline"}
             onClick={() => setActiveTab("external")}
-            className="flex items-center gap-2"
+            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
           >
-            <Globe className="h-4 w-4" />
-            India Jobs
+            <Globe className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">India</span> Jobs
             {externalJobs.length > 0 && (
-              <Badge variant="secondary" className="ml-1">{externalJobs.length}</Badge>
+              <Badge variant="secondary" className="ml-1 text-xs">{externalJobs.length}</Badge>
             )}
           </Button>
           {activeTab === "external" && (
@@ -158,7 +158,7 @@ export default function JobsPage() {
           placeholder="Search jobs by title or company..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="mb-6 max-w-md"
+          className="mb-6 w-full sm:max-w-md"
         />
 
         {/* Community Jobs Tab */}

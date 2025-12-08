@@ -20,12 +20,15 @@ export default function ConnectionsPage() {
 
   const fetchData = async () => {
     try {
-      const [conns, pend] = await Promise.all([
-        connectionAPI.getAll() as Promise<Connection[]>,
-        connectionAPI.getPending() as Promise<Connection[]>,
+      const [connsRes, pendRes] = await Promise.all([
+        connectionAPI.getAll(),
+        connectionAPI.getPending(),
       ])
-      setConnections(conns)
-      setPending(pend)
+      // Handle both object response {connections: [...]} and array response
+      const connsArray = Array.isArray(connsRes) ? connsRes : (connsRes as any)?.connections || []
+      const pendArray = Array.isArray(pendRes) ? pendRes : (pendRes as any)?.requests || []
+      setConnections(connsArray)
+      setPending(pendArray)
     } catch (error) {
       console.error("Failed to fetch connections:", error)
     } finally {
@@ -98,23 +101,25 @@ export default function ConnectionsPage() {
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {pending.map((conn) => (
                   <Card key={conn._id}>
-                    <CardContent className="flex items-center justify-between p-4">
-                      <div className="flex items-center gap-4">
+                    <CardContent className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4">
+                      <div className="flex items-center gap-3 sm:gap-4">
                         <Avatar>
                           <AvatarFallback>{conn.requester.name?.charAt(0)}</AvatarFallback>
                         </Avatar>
-                        <div>
-                          <p className="font-medium">{conn.requester.name}</p>
-                          <p className="text-sm text-muted-foreground">{conn.requester.email}</p>
-                          <Badge variant="secondary">{conn.requester.role}</Badge>
+                        <div className="min-w-0">
+                          <p className="font-medium truncate">{conn.requester.name}</p>
+                          <p className="text-sm text-muted-foreground truncate">{conn.requester.email}</p>
+                          <Badge variant="secondary" className="mt-1">{conn.requester.role}</Badge>
                         </div>
                       </div>
-                      <div className="flex gap-2">
-                        <Button size="sm" onClick={() => handleAccept(conn._id)}>
-                          <Check className="h-4 w-4" />
+                      <div className="flex gap-2 w-full sm:w-auto">
+                        <Button size="sm" onClick={() => handleAccept(conn._id)} className="flex-1 sm:flex-initial">
+                          <Check className="h-4 w-4 mr-1 sm:mr-0" />
+                          <span className="sm:hidden">Accept</span>
                         </Button>
-                        <Button size="sm" variant="outline" onClick={() => handleReject(conn._id)}>
-                          <X className="h-4 w-4" />
+                        <Button size="sm" variant="outline" onClick={() => handleReject(conn._id)} className="flex-1 sm:flex-initial">
+                          <X className="h-4 w-4 mr-1 sm:mr-0" />
+                          <span className="sm:hidden">Reject</span>
                         </Button>
                       </div>
                     </CardContent>

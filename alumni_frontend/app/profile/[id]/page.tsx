@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { MapPin, Briefcase, Building } from "lucide-react"
+import { MapPin, Briefcase, Building, Check, Clock, UserPlus } from "lucide-react"
 
 export default function ProfileDetailPage() {
   const { id } = useParams()
@@ -18,32 +18,110 @@ export default function ProfileDetailPage() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [connecting, setConnecting] = useState(false)
-  const [connected, setConnected] = useState(false)
+  const [connectionStatus, setConnectionStatus] = useState<string>("none")
+  const [connectionId, setConnectionId] = useState<string | null>(null)
+  const [isPendingForMe, setIsPendingForMe] = useState(false)
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       try {
-        const data = (await profileAPI.getByUserId(id as string)) as Profile
-        setProfile(data)
+        const [profileData, statusData] = await Promise.all([
+          profileAPI.getByUserId(id as string) as Promise<Profile>,
+          connectionAPI.checkStatus(id as string),
+        ])
+        setProfile(profileData)
+        setConnectionStatus(statusData.status)
+        setConnectionId(statusData.connectionId || null)
+        setIsPendingForMe(statusData.isPendingForMe || false)
       } catch (error) {
-        console.error("Failed to fetch profile:", error)
+        console.error("Failed to fetch data:", error)
       } finally {
         setLoading(false)
       }
     }
-    if (id) fetchProfile()
+    if (id) fetchData()
   }, [id])
 
   const handleConnect = async () => {
     setConnecting(true)
     try {
       await connectionAPI.send(id as string)
-      setConnected(true)
-    } catch (error) {
+      setConnectionStatus("pending")
+    } catch (error: any) {
       console.error("Failed to send connection:", error)
+      // If already exists, refresh status
+      if (error.message?.includes("already exists")) {
+        const statusData = await connectionAPI.checkStatus(id as string)
+        setConnectionStatus(statusData.status)
+      }
     } finally {
       setConnecting(false)
     }
+  }
+
+  const handleAccept = async () => {
+    if (!connectionId) return
+    try {
+      await connectionAPI.accept(connectionId)
+      setConnectionStatus("accepted")
+      setIsPendingForMe(false)
+    } catch (error) {
+      console.error("Failed to accept:", error)
+    }
+  }
+
+  const handleReject = async () => {
+    if (!connectionId) return
+    try {
+      await connectionAPI.reject(connectionId)
+      setConnectionStatus("none")
+      setIsPendingForMe(false)
+    } catch (error) {
+      console.error("Failed to reject:", error)
+    }
+  }
+
+  const renderConnectionButton = () => {
+    if (user?._id === id) return null
+
+    if (connectionStatus === "accepted") {
+      return (
+        <Button variant="outline" disabled className="gap-2">
+          <Check className="h-4 w-4" />
+          Connected
+        </Button>
+      )
+    }
+
+    if (connectionStatus === "pending" && isPendingForMe) {
+      return (
+        <div className="flex gap-2">
+          <Button onClick={handleAccept} size="sm" className="gap-1">
+            <Check className="h-4 w-4" />
+            Accept
+          </Button>
+          <Button onClick={handleReject} variant="outline" size="sm">
+            Reject
+          </Button>
+        </div>
+      )
+    }
+
+    if (connectionStatus === "pending") {
+      return (
+        <Button variant="outline" disabled className="gap-2">
+          <Clock className="h-4 w-4" />
+          Request Sent
+        </Button>
+      )
+    }
+
+    return (
+      <Button onClick={handleConnect} disabled={connecting} className="gap-2">
+        <UserPlus className="h-4 w-4" />
+        {connecting ? "Sending..." : "Connect"}
+      </Button>
+    )
   }
 
   if (loading) return <div className="container mx-auto px-4 py-8">Loading...</div>
@@ -71,11 +149,7 @@ export default function ProfileDetailPage() {
                   )}
                 </div>
               </div>
-              {user?._id !== id && (
-                <Button onClick={handleConnect} disabled={connecting || connected}>
-                  {connected ? "Request Sent" : connecting ? "Sending..." : "Connect"}
-                </Button>
-              )}
+              {renderConnectionButton()}
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
