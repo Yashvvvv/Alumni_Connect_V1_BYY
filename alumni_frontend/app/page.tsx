@@ -402,7 +402,7 @@ export default function HomePage() {
                 </Button>
               </Link>
               <Link href="/login">
-                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 h-12 px-8">
+                <Button size="lg" variant="outline" className="border-white/30 text-blue-700 hover:bg-blue-50 h-12 px-8">
                   Sign In Instead
                 </Button>
               </Link>
