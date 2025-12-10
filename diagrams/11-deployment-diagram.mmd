@@ -1,0 +1,40 @@
+graph TB
+    subgraph "Client Device"
+        Browser[Web Browser]
+    end
+    
+    subgraph "Frontend Server"
+        NextJS[Next.js Application<br/>Port 3000]
+        StaticFiles[Static Assets<br/>CSS, JS, Images]
+    end
+    
+    subgraph "Backend Server"
+        NodeJS[Node.js Runtime]
+        ExpressApp[Express Application<br/>Port 5000]
+        SocketServer[Socket.IO Server<br/>WebSocket]
+    end
+    
+    subgraph "Database Server"
+        MongoDB[(MongoDB<br/>Port 27017)]
+    end
+    
+    subgraph "External Services"
+        JWT_Service[JWT Authentication]
+    end
+    
+    Browser -->|HTTP/HTTPS| NextJS
+    Browser -->|WebSocket| SocketServer
+    NextJS --> StaticFiles
+    NextJS -->|REST API Calls| ExpressApp
+    
+    ExpressApp --> NodeJS
+    SocketServer --> NodeJS
+    
+    ExpressApp -->|Mongoose ODM| MongoDB
+    ExpressApp --> JWT_Service
+    
+    style Browser fill:#e1f5ff
+    style NextJS fill:#61dafb
+    style ExpressApp fill:#90c53f
+    style MongoDB fill:#4db33d
+    style SocketServer fill:#010101,color:#fff

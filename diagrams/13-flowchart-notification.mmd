@@ -1,0 +1,21 @@
+flowchart TD
+    Start([Trigger Event Occurs]) --> CreateNotif[Create Notification Object]
+    CreateNotif --> SetFields[Set Fields:<br/>user, fromUser, type, message]
+    SetFields --> SaveDB[(Save to Database)]
+    SaveDB --> CheckOnline{Is User Online?}
+    
+    CheckOnline -->|No| LogOffline[Log: User Offline]
+    LogOffline --> StoreOnly[Notification Stored Only]
+    StoreOnly --> End([End])
+    
+    CheckOnline -->|Yes| GetSocketID[Get User's Socket ID]
+    GetSocketID --> EmitEvent[Emit Socket.IO Event]
+    EmitEvent --> SendPayload[Send Notification Payload]
+    SendPayload --> LogSuccess[Log: Real-time Sent]
+    LogSuccess --> UpdateUI[User's UI Updates]
+    UpdateUI --> End
+    
+    SaveDB --> ErrorCheck{Save Error?}
+    ErrorCheck -->|Yes| LogError[Log Error Message]
+    LogError --> End
+    ErrorCheck -->|No| CheckOnline

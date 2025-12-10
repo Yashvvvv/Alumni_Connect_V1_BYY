@@ -1,0 +1,20 @@
+flowchart TD
+    Start([Student Views Job Board]) --> Browse[Browse Available Jobs]
+    Browse --> Filter{Apply Filters?}
+    Filter -->|Yes| ApplyFilter[Filter by Skills/Location/Type]
+    Filter -->|No| ViewJobs[View Job Listings]
+    ApplyFilter --> ViewJobs
+    ViewJobs --> SelectJob[Select Job to View Details]
+    SelectJob --> CheckAuth{Authenticated?}
+    CheckAuth -->|No| Login[Redirect to Login]
+    Login --> SelectJob
+    CheckAuth -->|Yes| ViewDetails[View Job Details]
+    ViewDetails --> CheckApplied{Already Applied?}
+    CheckApplied -->|Yes| ShowStatus[Show Application Status]
+    ShowStatus --> End([End])
+    CheckApplied -->|No| ClickApply[Click Apply Button]
+    ClickApply --> SubmitApp[Submit Application]
+    SubmitApp --> UpdateDB[(Update Database)]
+    UpdateDB --> NotifyAlumni[Notify Job Poster]
+    NotifyAlumni --> ShowConfirm[Show Confirmation]
+    ShowConfirm --> End

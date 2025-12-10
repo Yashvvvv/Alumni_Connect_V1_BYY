@@ -1,0 +1,58 @@
+# Connection Request Sequence Diagram
+
+**Generated**: 2025-12-09T23:43:03.761Z
+**Description**: Complete flow of sending and accepting connection requests with real-time notifications
+
+## Diagram
+
+```mermaid
+sequenceDiagram
+    actor UserA as User A
+    participant Frontend
+    participant ConnectionController
+    participant Database
+    participant NotificationService
+    participant SocketIO
+    actor UserB as User B
+    
+    UserA->>Frontend: Click "Connect" on User B profile
+    Frontend->>ConnectionController: POST /api/connections/send
+    ConnectionController->>Database: Check existing connection
+    Database-->>ConnectionController: No existing connection
+    ConnectionController->>Database: Create connection (status: pending)
+    Database-->>ConnectionController: Connection created
+    ConnectionController->>NotificationService: Send notification to User B
+    NotificationService->>Database: Create notification
+    NotificationService->>SocketIO: Emit notification event
+    SocketIO-->>UserB: Real-time notification
+    ConnectionController-->>Frontend: Connection request sent
+    Frontend-->>UserA: Show success message
+    
+    Note over UserB: User B receives notification
+    UserB->>Frontend: View pending requests
+    Frontend->>ConnectionController: GET /api/connections/pending
+    ConnectionController->>Database: Find pending requests
+    Database-->>ConnectionController: List of requests
+    ConnectionController-->>Frontend: Pending requests
+    Frontend-->>UserB: Display requests
+    
+    UserB->>Frontend: Click "Accept"
+    Frontend->>ConnectionController: PUT /api/connections/:id/accept
+    ConnectionController->>Database: Update status to "accepted"
+    Database-->>ConnectionController: Connection updated
+    ConnectionController->>NotificationService: Notify User A
+    NotificationService->>SocketIO: Emit notification
+    SocketIO-->>UserA: Connection accepted notification
+    ConnectionController-->>Frontend: Success
+    Frontend-->>UserB: Show success message
+```
+
+## Legend
+
+- Shows interaction between two users
+- Demonstrates real-time notification via Socket.IO
+- Includes database state changes
+
+## Notes
+
+Connection requests create notifications that are delivered in real-time if users are online
