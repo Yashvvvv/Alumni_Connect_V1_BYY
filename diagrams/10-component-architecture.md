@@ -1,0 +1,129 @@
+# System Component Architecture Diagram
+
+**Generated**: 2025-12-09T23:43:03.773Z
+**Description**: High-level component organization showing the layered architecture and dependencies
+
+## Diagram
+
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        UI[Next.js Frontend]
+        Components[React Components]
+        Context[Auth Context]
+        API_Client[API Client]
+    end
+    
+    subgraph "API Layer"
+        Express[Express Server]
+        Routes[Route Handlers]
+        Middleware[Auth Middleware]
+        Controllers[Controllers]
+    end
+    
+    subgraph "Business Logic Layer"
+        AuthController[Auth Controller]
+        ProfileController[Profile Controller]
+        EventController[Event Controller]
+        JobController[Job Controller]
+        ConnectionController[Connection Controller]
+        ChatController[Chat Controller]
+        NotificationController[Notification Controller]
+    end
+    
+    subgraph "Data Access Layer"
+        Models[Mongoose Models]
+        UserModel[User Model]
+        ProfileModel[Profile Model]
+        EventModel[Event Model]
+        JobModel[Job Model]
+        ConnectionModel[Connection Model]
+        MessageModel[Message Model]
+        NotificationModel[Notification Model]
+    end
+    
+    subgraph "External Services"
+        MongoDB[(MongoDB Database)]
+        SocketIO[Socket.IO Server]
+        JWT[JWT Token Service]
+    end
+    
+    subgraph "Utility Services"
+        TokenGen[Token Generator]
+        NotificationService[Notification Service]
+    end
+    
+    %% Client Layer Connections
+    UI --> Components
+    Components --> Context
+    Components --> API_Client
+    API_Client --> Express
+    
+    %% API Layer Connections
+    Express --> Routes
+    Routes --> Middleware
+    Middleware --> Controllers
+    
+    %% Controller Connections
+    Controllers --> AuthController
+    Controllers --> ProfileController
+    Controllers --> EventController
+    Controllers --> JobController
+    Controllers --> ConnectionController
+    Controllers --> ChatController
+    Controllers --> NotificationController
+    
+    %% Data Access Connections
+    AuthController --> Models
+    ProfileController --> Models
+    EventController --> Models
+    JobController --> Models
+    ConnectionController --> Models
+    ChatController --> Models
+    NotificationController --> Models
+    
+    Models --> UserModel
+    Models --> ProfileModel
+    Models --> EventModel
+    Models --> JobModel
+    Models --> ConnectionModel
+    Models --> MessageModel
+    Models --> NotificationModel
+    
+    %% External Service Connections
+    UserModel --> MongoDB
+    ProfileModel --> MongoDB
+    EventModel --> MongoDB
+    JobModel --> MongoDB
+    ConnectionModel --> MongoDB
+    MessageModel --> MongoDB
+    NotificationModel --> MongoDB
+    
+    AuthController --> TokenGen
+    EventController --> NotificationService
+    JobController --> NotificationService
+    ConnectionController --> NotificationService
+    
+    NotificationService --> SocketIO
+    TokenGen --> JWT
+    
+    SocketIO --> UI
+    
+    style UI fill:#e1f5ff
+    style Express fill:#fff4e1
+    style Controllers fill:#ffe1f5
+    style Models fill:#e1ffe1
+    style MongoDB fill:#f0f0f0
+```
+
+## Legend
+
+- Client Layer: Next.js frontend with React components
+- API Layer: Express server with routing and middleware
+- Business Logic: Controllers handling business rules
+- Data Access: Mongoose models for MongoDB
+- External Services: Database, real-time communication, authentication
+
+## Notes
+
+The system follows a clean layered architecture with clear separation of concerns. Socket.IO enables real-time features.

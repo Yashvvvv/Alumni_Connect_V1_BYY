@@ -1,0 +1,90 @@
+graph LR
+    %% Actors on the left
+    Student((👨‍🎓 Student))
+    Alumni((🎓 Alumni))
+    Admin((👨‍💼 Admin))
+
+    subgraph AUTH[🔐 Authentication]
+        UC1[Register]
+        UC2[Login]
+    end
+
+    subgraph PROFILE[👤 Profile Management]
+        UC3[Create/Update Profile]
+        UC4[View Profile]
+        UC5[Search Profiles]
+    end
+
+    subgraph CONNECT[🤝 Connections]
+        UC6[Send Request]
+        UC7[Accept/Reject]
+        UC8[View Connections]
+    end
+
+    subgraph EVENTS[📅 Events]
+        UC9[Create Event]
+        UC10[View Events]
+        UC11[Register for Event]
+        UC12[View Attendees]
+    end
+
+    subgraph JOBS[💼 Jobs]
+        UC13[Post Job]
+        UC14[View Jobs]
+        UC15[Apply to Job]
+        UC16[View Applicants]
+    end
+
+    subgraph COMM[💬 Communication]
+        UC17[Send Message]
+        UC18[View Messages]
+        UC19[Notifications]
+    end
+
+    subgraph ANNOUNCE[📢 Announcements]
+        UC20[Create Announcement]
+        UC21[View Announcements]
+    end
+
+    %% Student connections - Blue
+    Student -.-> AUTH
+    Student -.-> PROFILE
+    Student -.-> CONNECT
+    Student --> UC10
+    Student --> UC11
+    Student --> UC14
+    Student --> UC15
+    Student -.-> COMM
+    Student --> UC21
+
+    %% Alumni connections - Green
+    Alumni -.-> AUTH
+    Alumni -.-> PROFILE
+    Alumni -.-> CONNECT
+    Alumni -.-> EVENTS
+    Alumni -.-> JOBS
+    Alumni -.-> COMM
+    Alumni -.-> ANNOUNCE
+
+    %% Admin connections - Red
+    Admin -.-> AUTH
+    Admin -.-> PROFILE
+    Admin --> UC9
+    Admin --> UC10
+    Admin --> UC12
+    Admin --> UC13
+    Admin --> UC14
+    Admin --> UC16
+    Admin -.-> ANNOUNCE
+
+    %% Styling
+    style Student fill:#4A90D9,stroke:#2E5A8B,color:#fff
+    style Alumni fill:#27AE60,stroke:#1E8449,color:#fff
+    style Admin fill:#E74C3C,stroke:#C0392B,color:#fff
+    style AUTH fill:#F8F9FA,stroke:#6C757D
+    style PROFILE fill:#F8F9FA,stroke:#6C757D
+    style CONNECT fill:#F8F9FA,stroke:#6C757D
+    style EVENTS fill:#F8F9FA,stroke:#6C757D
+    style JOBS fill:#F8F9FA,stroke:#6C757D
+    style COMM fill:#F8F9FA,stroke:#6C757D
+    style ANNOUNCE fill:#F8F9FA,stroke:#6C757D

@@ -1,0 +1,20 @@
+stateDiagram-v2
+    [*] --> upcoming : Event Created
+    upcoming --> ongoing : Event Starts
+    ongoing --> completed : Event Ends
+    completed --> [*]
+    
+    note right of upcoming
+        Event scheduled
+        Users can register
+    end note
+    
+    note right of ongoing
+        Event in progress
+        Registration may be closed
+    end note
+    
+    note right of completed
+        Event finished
+        Historical record
+    end note

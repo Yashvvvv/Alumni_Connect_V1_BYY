@@ -1,0 +1,36 @@
+sequenceDiagram
+    actor Student
+    participant Frontend
+    participant EventController
+    participant Database
+    participant NotificationService
+    participant SocketIO
+    actor EventCreator
+    
+    Student->>Frontend: Browse events
+    Frontend->>EventController: GET /api/events
+    EventController->>Database: Find all events
+    Database-->>EventController: Event list
+    EventController-->>Frontend: Events data
+    Frontend-->>Student: Display events
+    
+    Student->>Frontend: Click "Register" for event
+    Frontend->>EventController: POST /api/events/:id/register
+    EventController->>Database: Find event by ID
+    Database-->>EventController: Event document
+    EventController->>EventController: Check if already registered
+    alt Not Registered
+        EventController->>Database: Add user to registeredUsers
+        Database-->>EventController: Event updated
+        EventController->>NotificationService: Notify event creator
+        NotificationService->>SocketIO: Emit to creator
+        SocketIO-->>EventCreator: New registration notification
+        EventController->>NotificationService: Notify student
+        NotificationService->>SocketIO: Emit to student
+        SocketIO-->>Student: Registration confirmation
+        EventController-->>Frontend: Success
+        Frontend-->>Student: Show confirmation
+    else Already Registered
+        EventController-->>Frontend: 400 Already registered
+        Frontend-->>Student: Show error message
+    end
