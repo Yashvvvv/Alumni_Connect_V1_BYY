@@ -1,0 +1,21 @@
+stateDiagram-v2
+    [*] --> pending : Send Connection Request
+    pending --> accepted : Recipient Accepts
+    pending --> rejected : Recipient Rejects
+    accepted --> [*]
+    rejected --> [*]
+    
+    note right of pending
+        Waiting for recipient
+        to respond
+    end note
+    
+    note right of accepted
+        Users are now connected
+        Can message each other
+    end note
+    
+    note right of rejected
+        Connection declined
+        Can send new request later
+    end note
